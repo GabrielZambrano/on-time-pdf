@@ -50,6 +50,7 @@ export function App() {
   const [fields, setFields] = useState<Field[] | null>(null)
   const [version, setVersion] = useState('')
   const [help, setHelp] = useState(false)
+  const [dismissed, setDismissed] = useState('')
   const [update, setUpdate] = useState<UpdateEvent | null>(null)
   const manualCheck = useRef(false)
   const viewerRef = useRef<HTMLDivElement>(null)
@@ -464,9 +465,17 @@ export function App() {
         </div>
       </header>
 
-      {update && (update.status === 'ready' || update.status === 'downloading' || update.status === 'progress') && (
+      {update && update.version !== dismissed && (update.status === 'available' || update.status === 'ready' || update.status === 'downloading' || update.status === 'progress') && (
         <div className="update-bar">
-          {update.status === 'ready' ? (
+          {update.status === 'available' ? (
+            <>
+              <span>Hay una versión nueva de On Time PDF: {update.version}.</span>
+              <button className="primary" onClick={() => api.downloadUpdate()}>
+                Actualizar ahora
+              </button>
+              <button onClick={() => setDismissed(update.version ?? '')}>Más tarde</button>
+            </>
+          ) : update.status === 'ready' ? (
             <>
               <span>La versión {update.version} está lista.</span>
               <button className="primary" onClick={() => api.installUpdate()}>

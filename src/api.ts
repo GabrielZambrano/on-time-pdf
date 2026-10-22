@@ -1,7 +1,7 @@
 import type { DocState, OpResult } from './types'
 
 export interface UpdateEvent {
-  status: 'checking' | 'none' | 'downloading' | 'progress' | 'ready' | 'error'
+  status: 'checking' | 'none' | 'available' | 'downloading' | 'progress' | 'ready' | 'error'
   version?: string
   percent?: number
   message?: string
@@ -13,6 +13,7 @@ interface Bridge {
   openSupport(): Promise<void>
   version(): Promise<string>
   checkUpdates(): Promise<void>
+  downloadUpdate(): Promise<void>
   installUpdate(): Promise<void>
   onUpdate(callback: (payload: UpdateEvent) => void): () => void
   bytes(): Promise<Uint8Array>

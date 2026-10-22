@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('onTime', {
   openSupport: () => ipcRenderer.invoke('app:support'),
   version: () => ipcRenderer.invoke('app:version'),
   checkUpdates: () => ipcRenderer.invoke('update:check'),
+  downloadUpdate: () => ipcRenderer.invoke('update:download'),
   installUpdate: () => ipcRenderer.invoke('update:install'),
   onUpdate: (callback) => {
     const handler = (_e, payload) => callback(payload)

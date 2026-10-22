@@ -111,10 +111,10 @@ function friendlyUpdateError(err) {
 }
 
 function setupUpdates() {
-  autoUpdater.autoDownload = true
+  autoUpdater.autoDownload = false
   autoUpdater.autoInstallOnAppQuit = true
   autoUpdater.on('checking-for-update', () => sendUpdate({ status: 'checking' }))
-  autoUpdater.on('update-available', (info) => sendUpdate({ status: 'downloading', version: info.version }))
+  autoUpdater.on('update-available', (info) => sendUpdate({ status: 'available', version: info.version }))
   autoUpdater.on('update-not-available', () => sendUpdate({ status: 'none' }))
   autoUpdater.on('download-progress', (p) => sendUpdate({ status: 'progress', percent: Math.round(p.percent) }))
   autoUpdater.on('update-downloaded', (info) => sendUpdate({ status: 'ready', version: info.version }))
@@ -180,6 +180,10 @@ ipcMain.handle('app:initial', () => {
 ipcMain.handle('app:support', () => shell.openExternal(SUPPORT_URL))
 ipcMain.handle('app:version', () => app.getVersion())
 ipcMain.handle('update:check', () => checkUpdates())
+ipcMain.handle('update:download', () => {
+  sendUpdate({ status: 'downloading' })
+  return autoUpdater.downloadUpdate().catch(() => undefined)
+})
 ipcMain.handle('update:install', () => autoUpdater.quitAndInstall())
 
 ipcMain.handle('doc:bytes', () => new Uint8Array(fs.readFileSync(currentPath())))
