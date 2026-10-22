@@ -1,0 +1,91 @@
+{
+  "name": "on-time-pdf",
+  "productName": "On Time PDF",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Editor de PDF personal de On Time Service",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"wait-on tcp:5173 && cross-env ONTIME_DEV=1 electron .\"",
+    "build": "tsc --noEmit && vite build",
+    "start": "vite build && electron .",
+    "dist": "npm run engine && vite build && electron-builder",
+    "engine": "node scripts/build-engine.cjs"
+  },
+  "build": {
+    "appId": "com.ontimeservice.pdf",
+    "productName": "On Time PDF",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**",
+      "electron/**",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "engine-dist",
+        "to": "engine"
+      }
+    ],
+    "fileAssociations": [
+      {
+        "ext": "pdf",
+        "name": "Documento PDF",
+        "role": "Editor"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icon.png",
+      "category": "public.app-category.productivity"
+    },
+    "artifactName": "On-Time-PDF-${version}-${os}.${ext}",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "GabrielZambrano",
+        "repo": "on-time-pdf",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9",
+    "pdfjs-dist": "^4.10.38",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "concurrently": "^10.0.6",
+    "cross-env": "^10.1.0",
+    "electron": "^33.4.11",
+    "electron-builder": "^26.15.3",
+    "typescript": "5.6",
+    "vite": "^5.4.21",
+    "wait-on": "^9.5.1"
+  },
+  "author": "On Time Service",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GabrielZambrano/on-time-pdf.git"
+  },
+  "license": "AGPL-3.0-only"
+}
