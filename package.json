@@ -28,6 +28,10 @@
       {
         "from": "engine-dist",
         "to": "engine"
+      },
+      {
+        "from": "tessdata",
+        "to": "tessdata"
       }
     ],
     "fileAssociations": [

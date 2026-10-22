@@ -571,31 +571,41 @@ def cmd_fill(a):
     return {}
 
 
+def bundled_tessdata():
+    here = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__))
+    for folder in (os.path.join(here, "..", "tessdata"), os.path.join(here, "tessdata"), os.path.join(here, "..", "..", "tessdata")):
+        folder = os.path.normpath(folder)
+        if os.path.isfile(os.path.join(folder, "spa.traineddata")):
+            return folder
+    return None
+
+
 def locate_tesseract():
+    data = bundled_tessdata()
+    if data:
+        os.environ["TESSDATA_PREFIX"] = data
+        return True
     if shutil.which("tesseract"):
         return True
-    home = os.path.expanduser("~")
     candidates = [
         os.path.join(os.environ.get("LOCALAPPDATA", ""), "Programs", "Tesseract-OCR"),
         os.path.join(os.environ.get("ProgramFiles", ""), "Tesseract-OCR"),
-        os.path.join(os.environ.get("ProgramFiles(x86)", ""), "Tesseract-OCR"),
         "/opt/homebrew/bin", "/usr/local/bin", "/usr/bin",
-        os.path.join(home, "AppData", "Local", "Programs", "Tesseract-OCR"),
     ]
     for folder in candidates:
         for name in ("tesseract.exe", "tesseract"):
             if folder and os.path.isfile(os.path.join(folder, name)):
                 os.environ["PATH"] = folder + os.pathsep + os.environ.get("PATH", "")
-                data = os.path.join(folder, "tessdata")
-                if os.path.isdir(data) and not os.environ.get("TESSDATA_PREFIX"):
-                    os.environ["TESSDATA_PREFIX"] = data
+                tessdata = os.path.join(folder, "tessdata")
+                if os.path.isdir(tessdata) and not os.environ.get("TESSDATA_PREFIX"):
+                    os.environ["TESSDATA_PREFIX"] = tessdata
                 return True
     return False
 
 
 def cmd_ocr(a):
     if not locate_tesseract():
-        raise ValueError("Tesseract no está instalado; instálelo para usar el reconocimiento de texto")
+        raise ValueError("No se encontraron los datos de reconocimiento de texto (tessdata)")
     doc = open_doc(a["src"])
     out = pymupdf.open()
     for number, page in enumerate(doc):
