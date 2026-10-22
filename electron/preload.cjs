@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer, webUtils } = require('electron')
 contextBridge.exposeInMainWorld('onTime', {
   open: (file) => ipcRenderer.invoke('doc:open', file),
   initialFile: () => ipcRenderer.invoke('app:initial'),
+  openSupport: () => ipcRenderer.invoke('app:support'),
   version: () => ipcRenderer.invoke('app:version'),
   checkUpdates: () => ipcRenderer.invoke('update:check'),
   installUpdate: () => ipcRenderer.invoke('update:install'),

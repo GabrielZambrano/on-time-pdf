@@ -10,6 +10,7 @@ export interface UpdateEvent {
 interface Bridge {
   open(file?: string): Promise<{ ok: boolean; error?: string; state?: DocState } | null>
   initialFile(): Promise<string | null>
+  openSupport(): Promise<void>
   version(): Promise<string>
   checkUpdates(): Promise<void>
   installUpdate(): Promise<void>

@@ -49,6 +49,7 @@ export function App() {
   const [busy, setBusy] = useState(false)
   const [fields, setFields] = useState<Field[] | null>(null)
   const [version, setVersion] = useState('')
+  const [help, setHelp] = useState(false)
   const [update, setUpdate] = useState<UpdateEvent | null>(null)
   const manualCheck = useRef(false)
   const viewerRef = useRef<HTMLDivElement>(null)
@@ -446,6 +447,9 @@ export function App() {
             Buscar actualización
           </button>
         </div>
+        <div className="group">
+          <button onClick={() => setHelp(true)}>Ayuda</button>
+        </div>
         <div className="group zoom">
           <button disabled={!doc} onClick={() => setZoom((z) => Math.max(0.25, z / 1.2))}>
             −
@@ -588,6 +592,27 @@ export function App() {
         <span>{version ? `v${version}` : ''}</span>
         <span className="hint">{busy ? 'Procesando…' : doc ? toolHint : ''}</span>
       </footer>
+
+      {help && (
+        <div className="modal-backdrop" onClick={() => setHelp(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Ayuda</h2>
+            <p>¿Necesita ayuda con On Time PDF o tiene una consulta? Escríbanos a On Time Service.</p>
+            <p className="phone">+593 99 555 5799</p>
+            <button className="primary big" onClick={() => api.openSupport()}>
+              Escribir por WhatsApp
+            </button>
+            <ul className="tips">
+              <li>Editar línea: clic en una palabra o arrastre sobre una línea.</li>
+              <li>Editar párrafo: el texto se reacomoda al cambiarlo (Ctrl+Enter aplica).</li>
+              <li>Añadir texto: clic, escriba y mueva la caja con «Mover» antes de aplicar.</li>
+              <li>Guardar copia nunca sobrescribe el original sin avisarle.</li>
+            </ul>
+            <p className="muted">Versión {version}</p>
+            <button onClick={() => setHelp(false)}>Cerrar</button>
+          </div>
+        </div>
+      )}
 
       <div className="toasts">
         {toasts.map((t) => (

@@ -505,3 +505,39 @@ textarea {
 .tools .swatch.on {
   box-shadow: 0 0 0 2px var(--ink);
 }
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--panel);
+  border-radius: 6px;
+  padding: 22px 26px;
+  width: min(440px, 92vw);
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.modal h2 {
+  margin: 0 0 8px;
+}
+
+.modal .phone {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 6px 0;
+}
+
+.modal .tips {
+  text-align: left;
+  color: var(--muted);
+  padding-left: 18px;
+  margin: 14px 0;
+}

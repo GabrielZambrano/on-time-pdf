@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, Menu, shell } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const os = require('os')
@@ -81,6 +81,9 @@ function pickFilters(kind) {
   return [{ name: 'PDF', extensions: ['pdf'] }]
 }
 
+const SUPPORT_PHONE = '593995555799'
+const SUPPORT_URL = `https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent('Hola, necesito ayuda con On Time PDF')}`
+
 function macMenu() {
   return [
     { role: 'appMenu' },
@@ -88,6 +91,7 @@ function macMenu() {
     { role: 'editMenu' },
     { role: 'viewMenu' },
     { role: 'windowMenu' },
+    { label: 'Ayuda', submenu: [{ label: 'Contactar a On Time Service por WhatsApp', click: () => shell.openExternal(SUPPORT_URL) }] },
   ]
 }
 
@@ -173,6 +177,7 @@ ipcMain.handle('app:initial', () => {
   return arg ? path.resolve(arg) : null
 })
 
+ipcMain.handle('app:support', () => shell.openExternal(SUPPORT_URL))
 ipcMain.handle('app:version', () => app.getVersion())
 ipcMain.handle('update:check', () => checkUpdates())
 ipcMain.handle('update:install', () => autoUpdater.quitAndInstall())
