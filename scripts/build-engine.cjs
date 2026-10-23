@@ -19,3 +19,16 @@ if (result.status !== 0) process.exit(result.status ?? 1)
 
 fs.renameSync(path.join(work, 'engine'), out)
 fs.rmSync(work, { recursive: true, force: true })
+
+// Make sure the bundled engine actually starts before it gets packaged.
+const exe = path.join(out, process.platform === 'win32' ? 'engine.exe' : 'engine')
+const check = spawnSync(exe, ['version'], { input: '{}', encoding: 'utf8' })
+let reply = null
+try {
+  reply = JSON.parse(check.stdout.trim().split('\n').pop())
+} catch {}
+if (!reply || !reply.ok) {
+  console.error('El motor compilado no arranca:\n' + (check.stderr || check.stdout || check.error))
+  process.exit(1)
+}
+console.log('Motor listo (pymupdf ' + reply.pymupdf + ')')

@@ -626,6 +626,10 @@ def cmd_copy(a):
     return {}
 
 
+def cmd_version(a):
+    return {"pymupdf": pymupdf.__version__}
+
+
 COMMANDS = {name[4:]: fn for name, fn in list(globals().items()) if name.startswith("cmd_")}
 
 

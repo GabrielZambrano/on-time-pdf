@@ -35,7 +35,8 @@ function runEngine(cmd, args) {
       try {
         resolve(JSON.parse(out.trim().split('\n').pop()))
       } catch {
-        resolve({ ok: false, error: err.trim().split('\n').pop() || 'El motor local no respondió' })
+        const lines = err.trim().split(/\r?\n/).filter((line) => line && !line.startsWith('[PYI-'))
+        resolve({ ok: false, error: lines.pop() || 'El motor local no respondió' })
       }
     })
     child.stdin.end(JSON.stringify(args))

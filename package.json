@@ -1,7 +1,7 @@
 {
   "name": "on-time-pdf",
   "productName": "On Time PDF",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": true,
   "description": "Editor de PDF personal de On Time Service",
   "main": "electron/main.cjs",
